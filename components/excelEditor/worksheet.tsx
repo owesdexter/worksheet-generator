@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect, useCallback, ReactNode } from 'react';
 import type { Row, Column, CellValue, CellRichTextValue, CellFormulaValue } from "exceljs";
-import { ExporterContext } from '../providers/context/exporter';
+import { useExporter } from '../providers/context/hooks';
 import { thKeywordMappingList, EThs, ALL_COLUMNS_LENGTH } from '../../constants';
 import { useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
@@ -40,7 +40,7 @@ export default function Preview(){
   const [footer, setFooter] = useState<Row[]>([]);
   const [rowIdxMapping, setRowIdxMapping] = useState<{[key:string]: number}>(initRowIdxMapping);
   const [colIdxMapping, setColIdxMapping] = useState<TThColIdxMapping>(initColIdxMapping);
-  const { worksheet } = useContext(ExporterContext);
+  const { worksheet } = useExporter();
 
   const test = ()=>{
     console.log()

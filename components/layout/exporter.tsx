@@ -1,19 +1,13 @@
 import { ReactElement } from 'react';
 import { useRouter } from 'next/router';
 import { useState, useContext, useEffect, useCallback } from 'react';
-import ExportContextProvider, { ExporterContext } from '@/components/providers/context/exporter';
+import ExportContextProvider from '@/components/providers/context/exporter';
+import { useExporter } from '@/components/providers/context/hooks';
 import { Button, message, Steps } from 'antd';
 import { useSelector } from "react-redux";
 import { useTranslation } from 'react-i18next';
 
 const { Step } = Steps;
-// const steps = [
-
-//   '__t_Basic',
-//   '__t_Overtime',
-//   '__t_Preview',
-//   '__t_Export',
-// ]
 
 const routes = [
   {
@@ -23,6 +17,10 @@ const routes = [
   {
     title: '__t_Overtime',
     path: '/exporter/overtime',
+  },
+  {
+    title: '__t_Dayoff',
+    path: '/exporter/dayoff',
   },
   {
     title: '__t_Preview',
@@ -36,17 +34,12 @@ const routes = [
 
 // TODO: declare children type
 export default function SecondLayout({ children }: any): ReactElement {
-  const { isProhibitedNext } = useContext(ExporterContext);
+  const { isProhibitedNext } = useExporter();
   const [currentStep, setCurrentStep] = useState<number>(2);
   const userInfo = useSelector((state:any) => state.user);
   const { t } = useTranslation();
   const router = useRouter();
-
   console.log(`render Second Layout`)
-
-  // if(typeof window === 'undefined'){
-  //   return
-  // }
 
   const next = ()=>{
     if(isProhibitedNext){
@@ -80,14 +73,6 @@ export default function SecondLayout({ children }: any): ReactElement {
       message.success({ content: 'Reset!', key, duration: 2 });
     }, 1000);
   };
-
-  // const routerPush = (idx: number)=>{
-  //   router.push(routes[idx].path);
-  // };
-
-  // useEffect(()=>{
-  //   routerPush(currentStep);
-  // }, [currentStep])
 
   return (
     <div className="layout-wrapper d-flex">

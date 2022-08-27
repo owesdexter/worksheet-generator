@@ -1,18 +1,16 @@
 import { useState, useEffect } from 'react';
-import { ISpecialWorkTime, IOvertime } from './providers/context/exporter';
-import { IOptions, ESpecialWorkHour, DAILY_OVERTIME_LIMIT } from '../constants';
-import { DatePicker, Select , Input, Space } from 'antd';
+import { IOptions, ILeave } from '../constants';
+import { TimePicker, DatePicker, Select , Input, Space } from 'antd';
 import type { Moment } from 'moment';
 import { PlusCircleOutlined } from '@ant-design/icons';
-import NumericalInput from './numericalInput';
 import moment from 'moment';
 import { CloseOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
 interface IWorkTimeEditorProps<T>{
-  type: ESpecialWorkHour;
   options: IOptions[];
   defaultValue: T[];
   defaultHour: number,
@@ -25,7 +23,6 @@ interface IWorkTimeEditorProps<T>{
 }
 
 export default function WorkTimeEditor({
-  type,
   options,
   defaultValue,
   defaultHour,
@@ -33,15 +30,17 @@ export default function WorkTimeEditor({
   maxHour,
   onChange,
   onInvalid
-}: IWorkTimeEditorProps<ISpecialWorkTime>){
-  class CSpecialWorkTime implements ISpecialWorkTime {
+}: IWorkTimeEditorProps<ILeave>){
+  const { t } = useTranslation();
+
+  class CSpecialWorkTime implements ILeave {
     startDate = new Date();
     hour: number;
     type: string;
     reason: string;
     file?: string;
 
-    constructor(props?: ISpecialWorkTime){
+    constructor(props?: ILeave){
       this.startDate = props? props.startDate: new Date();
       this.hour = props? props.hour: defaultHour;
       this.type = props? props.type: options[0].value;
@@ -50,7 +49,7 @@ export default function WorkTimeEditor({
     }
   }
 
-  const [list, setList] = useState<ISpecialWorkTime[]>(defaultValue);
+  const [list, setList] = useState<ILeave[]>(defaultValue);
 
   const checkHasSameDate = (date: Date)=>{
     return list.findIndex(el=>
@@ -79,7 +78,7 @@ export default function WorkTimeEditor({
     setList(pre=>[...pre, obj]);
   }
 
-  const handleDateChange = (value: Moment | null, dateString:string, item:ISpecialWorkTime, idx:number) => {
+  const handleStartdateChange = (value: Moment | null, dateString:string, item:ILeave, idx:number) => {
     if(!value){
       return
     }
@@ -92,21 +91,21 @@ export default function WorkTimeEditor({
     setList(arr);
   };
 
-  const handleHourChange = (value: string, item:ISpecialWorkTime, idx:number) => {
+  const handleHourChange = (value: string, item:ILeave, idx:number) => {
     const arr = [...list];
     item.hour = parseInt(value);
     arr.splice(idx, 1, item);
     setList(arr);
   };
 
-  const handleTypeChange = (value: string, item:ISpecialWorkTime, idx:number) => {
+  const handleTypeChange = (value: string, item:ILeave, idx:number) => {
     const arr = [...list];
     item.type = value;
     arr.splice(idx, 1, item);
     setList(arr);
   };
 
-  const handleReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>, item:ISpecialWorkTime, idx:number) => {
+  const handleReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>, item:ILeave, idx:number) => {
     const arr = [...list];
     item.reason = e.target.value;
     arr.splice(idx, 1, item);
@@ -133,21 +132,13 @@ export default function WorkTimeEditor({
               <CloseOutlined />
             </div>
             <div>
-              <label htmlFor="">日期</label>
-              <DatePicker
-                defaultValue={moment(el.startDate.toLocaleDateString(), 'MM/DD/YYYY')}
-                format={'YYYY/MM/DD'}
-                onChange={(date, dateString)=>handleDateChange(date, dateString, el, index)}
-              />
-            </div>
-            <div>
-              <label htmlFor="">申請</label>
+              <label htmlFor="">{t('__t_Leave_type')}</label>
               <Select defaultValue={el.type} onChange={(value)=>handleTypeChange(value, el, index)}>
                 {options.map(option=>(
                   <Option value={option.value} key={option.title}>{option.title}</Option>
                 ))}
               </Select>
-              <NumericalInput
+              {/* <NumericalInput
                 value={el.hour}
                 min={minHour}
                 max={maxHour}
@@ -155,14 +146,23 @@ export default function WorkTimeEditor({
                 minWarningHint={`拜託不要亂填`}
                 onChange={(value)=>handleHourChange(value, el, index)}
                 onInvalid={onInvalid}
-              />
-              <label htmlFor="">小時</label>
+              /> */}
             </div>
+            <div>
+              <label htmlFor="">{t('__t_Start_date')}</label>
+              <DatePicker
+                defaultValue={moment(el.startDate.toLocaleDateString(), 'MM/DD/YYYY')}
+                format={'YYYY/MM/DD'}
+                onChange={(date, dateString)=>handleStartdateChange(date, dateString, el, index)}
+              />
+              <TimePicker.RangePicker format={'HH:mm'}/>
+            </div>
+
             <div>
               <label htmlFor="">理由</label>
               <TextArea
                 defaultValue={el.reason}
-                placeholder="__t_enter_sth"
+                placeholder={t('__t_Plz_enter_sth', {sth: t('__t_sth_Reason')})}
                 autoSize={true}
                 onChange={(e)=>handleReasonChange(e, el, index)}
               />

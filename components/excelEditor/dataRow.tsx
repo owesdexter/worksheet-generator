@@ -2,7 +2,7 @@ import type { Row, CellValue } from "exceljs";
 import type { Moment } from 'moment';
 import { TimePicker } from 'antd';
 import moment from 'moment';
-import { ExporterContext } from '../providers/context/exporter';
+import { useExporter } from '../providers/context/hooks';
 import { useState, useEffect, useContext, ReactNode } from 'react';
 import { TThColIdxMapping } from './worksheet';
 
@@ -12,12 +12,15 @@ type TRowProp = {
 }
 
 export default function DataRow({row, colIdxMapping}: TRowProp){
+
   const {
     generalWorkTime,
     overtime,
     dayoff,
     isProhibitedNext
-  } = useContext(ExporterContext);
+  } = useExporter();
+
+  // console.log(row)
 
   const getDefaultCheckInTime = (): Date=>{
     const { sd, startTime } = generalWorkTime;
@@ -44,30 +47,49 @@ export default function DataRow({row, colIdxMapping}: TRowProp){
     const cells = [] as ReactNode[];
     row.eachCell({ includeEmpty: true }, (cell, colNumber)=>{
       if(colNumber === colIdxMapping.checkInTime){
-        cells.push(
-          <td>
-            <TimePicker
-              format={'HH:mm'}
-              minuteStep={5}
-              defaultValue={moment(`${checkInTime.toLocaleTimeString('en-US', { hour12: false })}`, 'HH:mm')}
-              onChange={handleCheckInTimeChange}
-              className="checkin-timer"
-            />
-          </td>
-        )
+        if(cell.style.fill.pattern !== 'solid'){
+
+          cells.push(
+            <td>
+              <TimePicker
+                format={'HH:mm'}
+                minuteStep={5}
+                defaultValue={moment(`${checkInTime.toLocaleTimeString('en-US', { hour12: false })}`, 'HH:mm')}
+                onChange={handleCheckInTimeChange}
+                className="checkin-timer"
+              />
+            </td>
+          )
+        }else{
+          cells.push(
+            <td></td>
+          )
+        }
       }else if(colNumber === colIdxMapping.checkOutTime){
+        if(cell.style.fill.pattern !== 'solid'){
+          cells.push(
+            <td>
+              <TimePicker
+                format={'HH:mm'}
+                minuteStep={5}
+                defaultValue={moment(`${checkOutTime.toLocaleTimeString('en-US', { hour12: false })}`, 'HH:mm')}
+                onChange={handleCheckInTimeChange}
+                className="checkin-timer"
+              />
+            </td>
+          )
+        }else{
+          cells.push(
+            <td></td>
+          )
+        }
+      }else if(colNumber === colIdxMapping.leaveHours){
         cells.push(
           <td>
-            <TimePicker
-              format={'HH:mm'}
-              minuteStep={5}
-              defaultValue={moment(`${checkOutTime.toLocaleTimeString('en-US', { hour12: false })}`, 'HH:mm')}
-              onChange={handleCheckInTimeChange}
-              className="checkin-timer"
-            />
+
           </td>
         )
-      }else if(colNumber === colIdxMapping.absentHours){
+      }else if(colNumber === colIdxMapping.actualHours){
         cells.push(
           <td>
 

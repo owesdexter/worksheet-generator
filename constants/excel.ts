@@ -18,7 +18,6 @@ function monthExpression(month: string | number | undefined = now.getMonth()+1){
 }
 
 export const getWorksheetName = (month: string | number)=>{
-  // monthExpression(month);
   return thisROCYear + monthExpression(month);
 }
 
@@ -92,44 +91,6 @@ export const thKeywordMappingList:ITh[] = [
   },
 ]
 
-export enum ESpecialWorkHour {
-  Overtime = 'overtime',
-  Dayoff = 'dayoff'
-}
-
-export enum ELeaveType {
-  Annual = 'annual',
-  Vaxxed = 'vaxxed',
-  Sick = 'sick',
-  Personal = 'personal',
-  Familycare = 'familycare',
-  Official = 'Official',
-  Marriage  = 'marriage ',
-  Funeral = 'funeral',
-  Paternity = 'paternity',
-}
-
-export enum EOvertimeAwardType {
-  Money = 'money',
-  Dayoff = 'dayoff'
-}
-
-export const MONTHLY_OVERTIME_LIMIT = 46;
-export const DAILY_OVERTIME_LIMIT = 8;
-
-// export enum EThKeywords {
-//   Date = '日期',
-//   Day = '星期',
-//   CheckInTime = '開始',
-//   CheckOutTime = '結束',
-//   NormalWorkHours = '正常',
-//   AbsentHours = '缺勤',
-//   LeaveHours = '補休',
-//   OverTimeHours = '加班',
-//   ActualHours = '實際',
-//   Note = '備註',
-// };
-
 export const fieldNames = {
   TITLE: '易勝資訊人員工時表',
   STAFF_NAME: '人員姓名',
@@ -155,6 +116,19 @@ export enum ETimesheetFieldNames {
   STAFF_SIGNATURE = '員工簽名',
   CUSTOMER_SIGNATURE = '客戶簽名確認',
 }
+
+// export enum EThKeywords {
+//   Date = '日期',
+//   Day = '星期',
+//   CheckInTime = '開始',
+//   CheckOutTime = '結束',
+//   NormalWorkHours = '正常',
+//   AbsentHours = '缺勤',
+//   LeaveHours = '補休',
+//   OverTimeHours = '加班',
+//   ActualHours = '實際',
+//   Note = '備註',
+// };
 
 
 // class CThList{

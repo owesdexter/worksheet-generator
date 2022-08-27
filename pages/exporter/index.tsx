@@ -4,7 +4,7 @@ import Layout from '@/components/layout/main';
 import ExporterLayout from '@/components/layout/exporter';
 import moment from 'moment';
 import { useState, useContext, useEffect, ReactElement } from 'react';
-import { ExporterContext } from '@/components/providers/context/exporter';
+import { useExporter } from '@/components/providers/context/hooks';
 import NumericalInput from '@/components/numericalInput';
 import { getAllMonth } from '../../constants';
 import { useTranslation } from 'react-i18next';
@@ -13,7 +13,7 @@ const { Option } = Select;
 const selectableMonths = getAllMonth();
 
 export default function Basic(){
-  const { generalWorkTime, updateGeneralWorkTime } = useContext(ExporterContext);
+  const { generalWorkTime, updateGeneralWorkTime } = useExporter();
   const { sd, startTime, targetMonth } = generalWorkTime;
   const { t } = useTranslation();
 

@@ -1,26 +1,29 @@
 import React, { useEffect, useState, useMemo, useCallback } from 'react';
 import { ref, getBytes } from 'firebase/storage';
-import { storage } from '../../../pages/api/firebase/getFile';
-import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH, ALL_ROWS_LENGTH } from '../../../constants';
+import { storage } from '@/pages/api/firebase/getFile';
+import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH, IOvertime, ILeave, ALL_ROWS_LENGTH, ELeaveType } from '@/constants';
 import Excel from "exceljs";
 
 // Define interfaces
-export interface ISpecialWorkTime {
-  startDate: Date;
-  hour: number;
-  type: string;
-  reason: string;
-  file?: string;
-}
+// export interface ISpecialWorkTime {
+//   reason: string;
+//   file?: string;
+// }
 
-export interface IOvertime extends ISpecialWorkTime{
-}
+// export interface IOvertime extends ISpecialWorkTime{
+//   startDate: Date;
+//   hour: number;
+//   type: string;
+// }
 
-export interface IDayoff extends ISpecialWorkTime{
-  endtDate: Date;
-}
+// export interface ILeave extends ISpecialWorkTime{
+//   type: string;
+//   startTime: Date;
+//   endTime: Date;
+//   endtDate: Date;
+// }
 
-export interface IGeneralWorkTime {
+interface IGeneralWorkTime {
   targetMonth: number,
   startTime: Date;
   sd: number,
@@ -29,12 +32,12 @@ export interface IGeneralWorkTime {
 export interface IExporterContext {
   generalWorkTime: IGeneralWorkTime;
   overtime: IOvertime[];
-  dayoff: IDayoff[];
+  dayoff: ILeave[];
   isProhibitedNext: boolean;
   worksheet?: Excel.Worksheet;
   updateGeneralWorkTime: (value: IGeneralWorkTime)=>void;
   updateOvertime: (value: IOvertime[])=>void;
-  updateDayoff: (value: IDayoff[])=>void;
+  updateDayoff: (value: ILeave[])=>void;
   updateIsProhibitedNext: (value: boolean)=>void;
   updateWorksheet: (value: Excel.Worksheet)=>void;
 }
@@ -62,7 +65,7 @@ const defaultContextValue:IExporterContext = {
   updateOvertime: (value: IOvertime[])=>{
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
   },
-  updateDayoff: (value: IDayoff[])=>{
+  updateDayoff: (value: ILeave[])=>{
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
   },
   updateIsProhibitedNext: (value: boolean)=>{
@@ -80,7 +83,7 @@ export const ExporterContext = React.createContext<IExporterContext>(defaultCont
 export default function ExportContextProvider({children}: any){
   const [generalWorkTime, setGeneralWorkTime] = useState<IGeneralWorkTime>(defaultContextValue.generalWorkTime);
   const [overtime, setOvertime] = useState<IOvertime[]>([]);
-  const [dayoff, setDayoff] = useState<IDayoff[]>([]);
+  const [dayoff, setDayoff] = useState<ILeave[]>([]);
   const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
   const [worksheet, setWorksheet] = useState<Excel.Worksheet>();
 
@@ -92,7 +95,7 @@ export default function ExportContextProvider({children}: any){
     setOvertime(value);
   }, [setOvertime]);
 
-  const updateDayoff = useCallback((value: IDayoff[])=>{
+  const updateDayoff = useCallback((value: ILeave[])=>{
     setDayoff(value);
   }, [setDayoff]);
 

@@ -1,9 +1,9 @@
 import { useState, useContext, useEffect, ReactElement } from 'react';
-import { ExporterContext, ISpecialWorkTime } from '@/components/providers/context/exporter'
+import { useExporter } from '@/components/providers/context/hooks'
 import OverTimeEditor from '@/components/overTimeEditor';
 import Layout from '@/components/layout/main';
 import ExporterLayout from '@/components/layout/exporter';
-import { ESpecialWorkHour, EOvertimeAwardType, MONTHLY_OVERTIME_LIMIT } from '../../constants';
+import { EOvertimeAwardType, MONTHLY_OVERTIME_LIMIT, IOvertime } from '../../constants';
 import { useTranslation } from 'react-i18next';
 
 const overTimeOptions = [
@@ -18,11 +18,11 @@ const overTimeOptions = [
 ]
 
 export default function Overtime(){
-  const { overtime, updateOvertime, updateIsProhibitedNext } = useContext(ExporterContext);
+  const { overtime, updateOvertime, updateIsProhibitedNext } = useExporter();
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
   const { t } = useTranslation();
 
-  const handleListChange = (list:ISpecialWorkTime[])=>{
+  const handleListChange = (list:IOvertime[])=>{
     updateOvertime(list);
   }
 
@@ -37,7 +37,6 @@ export default function Overtime(){
     <div className="basic-step-container">
       <div className="step-title-container">{t('__t_Add_sth', {sth: t('__t_overtime_section')})}</div>
       <OverTimeEditor
-        type={ESpecialWorkHour.Overtime}
         defaultHour={2}
         minHour={0}
         maxHour={8}

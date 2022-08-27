@@ -1,18 +1,18 @@
 import { useState, useEffect } from 'react';
-import { ISpecialWorkTime, IOvertime } from './providers/context/exporter';
-import { IOptions, ESpecialWorkHour, DAILY_OVERTIME_LIMIT } from '../constants';
+import {  } from './providers/context/exporter';
+import { IOptions, IOvertime, DAILY_OVERTIME_LIMIT } from '../constants';
 import { DatePicker, Select , Input, Space } from 'antd';
 import type { Moment } from 'moment';
 import { PlusCircleOutlined } from '@ant-design/icons';
 import NumericalInput from './numericalInput';
 import moment from 'moment';
 import { CloseOutlined } from '@ant-design/icons';
+import { useTranslation } from 'react-i18next';
 
 const { TextArea } = Input;
 const { Option } = Select;
 
-interface IWorkTimeEditorProps<T>{
-  type: ESpecialWorkHour;
+interface IOvertimeEditorProps<T>{
   options: IOptions[];
   defaultValue: T[];
   defaultHour: number,
@@ -25,7 +25,6 @@ interface IWorkTimeEditorProps<T>{
 }
 
 export default function WorkTimeEditor({
-  type,
   options,
   defaultValue,
   defaultHour,
@@ -33,15 +32,17 @@ export default function WorkTimeEditor({
   maxHour,
   onChange,
   onInvalid
-}: IWorkTimeEditorProps<ISpecialWorkTime>){
-  class CSpecialWorkTime implements ISpecialWorkTime {
+}: IOvertimeEditorProps<IOvertime>){
+  const { t } = useTranslation();
+
+  class CSpecialWorkTime implements IOvertime {
     startDate = new Date();
     hour: number;
     type: string;
     reason: string;
     file?: string;
 
-    constructor(props?: ISpecialWorkTime){
+    constructor(props?: IOvertime){
       this.startDate = props? props.startDate: new Date();
       this.hour = props? props.hour: defaultHour;
       this.type = props? props.type: options[0].value;
@@ -50,7 +51,7 @@ export default function WorkTimeEditor({
     }
   }
 
-  const [list, setList] = useState<ISpecialWorkTime[]>(defaultValue);
+  const [list, setList] = useState<IOvertime[]>(defaultValue);
 
   const checkHasSameDate = (date: Date)=>{
     return list.findIndex(el=>
@@ -79,7 +80,7 @@ export default function WorkTimeEditor({
     setList(pre=>[...pre, obj]);
   }
 
-  const handleDateChange = (value: Moment | null, dateString:string, item:ISpecialWorkTime, idx:number) => {
+  const handleDateChange = (value: Moment | null, dateString:string, item:IOvertime, idx:number) => {
     if(!value){
       return
     }
@@ -92,21 +93,21 @@ export default function WorkTimeEditor({
     setList(arr);
   };
 
-  const handleHourChange = (value: string, item:ISpecialWorkTime, idx:number) => {
+  const handleHourChange = (value: string, item:IOvertime, idx:number) => {
     const arr = [...list];
     item.hour = parseInt(value);
     arr.splice(idx, 1, item);
     setList(arr);
   };
 
-  const handleTypeChange = (value: string, item:ISpecialWorkTime, idx:number) => {
+  const handleTypeChange = (value: string, item:IOvertime, idx:number) => {
     const arr = [...list];
     item.type = value;
     arr.splice(idx, 1, item);
     setList(arr);
   };
 
-  const handleReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>, item:ISpecialWorkTime, idx:number) => {
+  const handleReasonChange = (e: React.ChangeEvent<HTMLTextAreaElement>, item:IOvertime, idx:number) => {
     const arr = [...list];
     item.reason = e.target.value;
     arr.splice(idx, 1, item);
