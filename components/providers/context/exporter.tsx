@@ -4,25 +4,6 @@ import { storage } from '@/pages/api/firebase/getFile';
 import { getWorksheetName, EXCEL_EXAMPLE_FILE_PATH, IOvertime, ILeave, ALL_ROWS_LENGTH, ELeaveType } from '@/constants';
 import Excel from "exceljs";
 
-// Define interfaces
-// export interface ISpecialWorkTime {
-//   reason: string;
-//   file?: string;
-// }
-
-// export interface IOvertime extends ISpecialWorkTime{
-//   startDate: Date;
-//   hour: number;
-//   type: string;
-// }
-
-// export interface ILeave extends ISpecialWorkTime{
-//   type: string;
-//   startTime: Date;
-//   endTime: Date;
-//   endtDate: Date;
-// }
-
 interface IGeneralWorkTime {
   targetMonth: number,
   startTime: Date;
@@ -31,18 +12,16 @@ interface IGeneralWorkTime {
 
 export interface IExporterContext {
   generalWorkTime: IGeneralWorkTime;
-  overtime: IOvertime[];
-  dayoff: ILeave[];
+  overtimeList: IOvertime[];
+  leaveSectionList: ILeave[];
   isProhibitedNext: boolean;
   worksheet?: Excel.Worksheet;
   updateGeneralWorkTime: (value: IGeneralWorkTime)=>void;
-  updateOvertime: (value: IOvertime[])=>void;
-  updateDayoff: (value: ILeave[])=>void;
+  updateOvertimeList: (value: IOvertime[])=>void;
+  updateLeaveSectionList: (value: ILeave[])=>void;
   updateIsProhibitedNext: (value: boolean)=>void;
   updateWorksheet: (value: Excel.Worksheet)=>void;
 }
-
-
 
 const defaultContextValue:IExporterContext = {
   generalWorkTime: {
@@ -55,17 +34,17 @@ const defaultContextValue:IExporterContext = {
     )(),
     sd: 5,
   },
-  overtime: [],
-  dayoff: [],
+  overtimeList: [],
+  leaveSectionList: [],
   isProhibitedNext: false,
 
   updateGeneralWorkTime: (value: IGeneralWorkTime):void =>{
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
   },
-  updateOvertime: (value: IOvertime[])=>{
+  updateOvertimeList: (value: IOvertime[])=>{
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
   },
-  updateDayoff: (value: ILeave[])=>{
+  updateLeaveSectionList: (value: ILeave[])=>{
     throw new Error('You probably forgot to put <ExporterContextProvider>.');
   },
   updateIsProhibitedNext: (value: boolean)=>{
@@ -82,8 +61,8 @@ export const ExporterContext = React.createContext<IExporterContext>(defaultCont
 // Build Component context provider
 export default function ExportContextProvider({children}: any){
   const [generalWorkTime, setGeneralWorkTime] = useState<IGeneralWorkTime>(defaultContextValue.generalWorkTime);
-  const [overtime, setOvertime] = useState<IOvertime[]>([]);
-  const [dayoff, setDayoff] = useState<ILeave[]>([]);
+  const [overtimeList, setOvertimeList] = useState<IOvertime[]>([]);
+  const [leaveSectionList, setLeaveSectionList] = useState<ILeave[]>([]);
   const [isProhibitedNext, setIsProhibitedNext] = useState<boolean>(false);
   const [worksheet, setWorksheet] = useState<Excel.Worksheet>();
 
@@ -91,13 +70,13 @@ export default function ExportContextProvider({children}: any){
     setGeneralWorkTime(value);
   }, [setGeneralWorkTime]);
 
-  const updateOvertime = useCallback((value: IOvertime[])=>{
-    setOvertime(value);
-  }, [setOvertime]);
+  const updateOvertimeList = useCallback((value: IOvertime[])=>{
+    setOvertimeList(value);
+  }, [setOvertimeList]);
 
-  const updateDayoff = useCallback((value: ILeave[])=>{
-    setDayoff(value);
-  }, [setDayoff]);
+  const updateLeaveSectionList = useCallback((value: ILeave[])=>{
+    setLeaveSectionList(value);
+  }, [setLeaveSectionList]);
 
   const updateIsProhibitedNext = useCallback((value: boolean)=>{
     setIsProhibitedNext(value);
@@ -145,25 +124,25 @@ export default function ExportContextProvider({children}: any){
   const contextValue = useMemo<IExporterContext>(
     () => ({
       generalWorkTime,
-      overtime,
-      dayoff,
+      overtimeList,
+      leaveSectionList,
       isProhibitedNext,
       worksheet,
       updateGeneralWorkTime,
-      updateOvertime,
-      updateDayoff,
+      updateOvertimeList,
+      updateLeaveSectionList,
       updateIsProhibitedNext,
       updateWorksheet
     }),
     [
       generalWorkTime,
-      overtime,
-      dayoff,
+      overtimeList,
+      leaveSectionList,
       isProhibitedNext,
       worksheet,
       updateGeneralWorkTime,
-      updateOvertime,
-      updateDayoff,
+      updateOvertimeList,
+      updateLeaveSectionList,
       updateIsProhibitedNext,
       updateWorksheet
     ],

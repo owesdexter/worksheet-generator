@@ -16,7 +16,7 @@ export default function DataRow({row, colIdxMapping}: TRowProp){
   const {
     generalWorkTime,
     overtime,
-    dayoff,
+    leave,
     isProhibitedNext
   } = useExporter();
 
@@ -97,7 +97,7 @@ export default function DataRow({row, colIdxMapping}: TRowProp){
         )
       }else{
         cells.push(
-          <td>{cell.value? `${cell.value}` : null}</td>
+          <td className="text-center">{cell.value? `${cell.value}` : null}</td>
         )
       }
     })

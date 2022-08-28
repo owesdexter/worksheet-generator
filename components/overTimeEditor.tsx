@@ -12,15 +12,15 @@ import { useTranslation } from 'react-i18next';
 const { TextArea } = Input;
 const { Option } = Select;
 
-interface IOvertimeEditorProps<T>{
+interface IOvertimeEditorProps{
   options: IOptions[];
-  defaultValue: T[];
+  defaultValue: IOvertime[];
   defaultHour: number,
   minHour?: number,
   maxHour?: number,
   weeklyMaxHour?: number,
   monthlyMaxHour?: number
-  onChange: (list: T[])=>void
+  onChange: (list: IOvertime[])=>void
   onInvalid?: (value: boolean)=>void;
 }
 
@@ -32,10 +32,10 @@ export default function WorkTimeEditor({
   maxHour,
   onChange,
   onInvalid
-}: IOvertimeEditorProps<IOvertime>){
+}: IOvertimeEditorProps){
   const { t } = useTranslation();
 
-  class CSpecialWorkTime implements IOvertime {
+  class COvertime implements IOvertime {
     startDate = new Date();
     hour: number;
     type: string;
@@ -71,7 +71,7 @@ export default function WorkTimeEditor({
       createItem(date, counter);
       return
     }
-    const obj = new CSpecialWorkTime({
+    const obj = new COvertime({
       startDate: date,
       hour: defaultHour,
       type: options[0].value,
@@ -126,7 +126,7 @@ export default function WorkTimeEditor({
   }, [list, onChange])
 
   return(
-    <div className="basic-step-container">
+    <div className="">
       <ul className="special-worktime-container">
         {list?.length? list.map((el, index)=>(
           <li className="special-worktime-card" key={index}>

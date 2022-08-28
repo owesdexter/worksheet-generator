@@ -13,35 +13,35 @@ const overTimeOptions = [
   },
   {
     title: '__t_Overtime_vocation',
-    value: EOvertimeAwardType.Dayoff,
+    value: EOvertimeAwardType.Leave,
   },
 ]
 
 export default function Overtime(){
-  const { overtime, updateOvertime, updateIsProhibitedNext } = useExporter();
+  const { overtimeList, updateOvertimeList, updateIsProhibitedNext } = useExporter();
   const [showMaxWarning, setShowMaxWarning] = useState<boolean>(false);
   const { t } = useTranslation();
 
   const handleListChange = (list:IOvertime[])=>{
-    updateOvertime(list);
+    updateOvertimeList(list);
   }
 
   useEffect(()=>{
-    const total = overtime.reduce((acc, cur)=>acc + cur.hour, 0);
+    const total = overtimeList.reduce((acc, cur)=>acc + cur.hour, 0);
     let value = total > MONTHLY_OVERTIME_LIMIT;
     setShowMaxWarning(value);
     updateIsProhibitedNext(value);
-  }, [overtime, updateIsProhibitedNext]);
+  }, [overtimeList, updateIsProhibitedNext]);
 
   return(
-    <div className="basic-step-container">
+    <div className="">
       <div className="step-title-container">{t('__t_Add_sth', {sth: t('__t_overtime_section')})}</div>
       <OverTimeEditor
         defaultHour={2}
         minHour={0}
         maxHour={8}
         options={overTimeOptions}
-        defaultValue={overtime}
+        defaultValue={overtimeList}
         onChange={handleListChange}
         onInvalid={updateIsProhibitedNext}
       />

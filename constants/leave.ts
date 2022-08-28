@@ -10,7 +10,12 @@ export enum ELeaveType {
   Paternity = 'paternity',
 }
 
-export const leaveTypes = [
+export type TLeaveOptions = {
+  title: string,
+  value: ELeaveType,
+}
+
+export const leaveTypes: TLeaveOptions[] = [
   {
     title: '__t_Annual_leave',
     value: ELeaveType.Annual,
@@ -50,10 +55,9 @@ export const leaveTypes = [
 ]
 
 export interface ILeave{
-  type: string;
+  type: ELeaveType;
   startTime: Date;
   endTime: Date;
-  endtDate: Date;
   reason: string;
   file?: string;
 }

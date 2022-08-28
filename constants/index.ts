@@ -1,6 +1,6 @@
 export * from './excel';
 export * from './neuip';
-export * from './dayoff';
+export * from './leave';
 export * from './overtime';
 
 export interface IOptions {

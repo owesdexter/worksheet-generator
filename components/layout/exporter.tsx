@@ -19,8 +19,8 @@ const routes = [
     path: '/exporter/overtime',
   },
   {
-    title: '__t_Dayoff',
-    path: '/exporter/dayoff',
+    title: '__t_Leave',
+    path: '/exporter/leave',
   },
   {
     title: '__t_Preview',

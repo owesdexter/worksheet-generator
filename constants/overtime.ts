@@ -5,7 +5,7 @@ export const DAILY_OVERTIME_LIMIT = 8;
 
 export enum EOvertimeAwardType {
   Money = 'money',
-  Dayoff = 'dayoff'
+  Leave = 'leave'
 }
 
 export const overTimeTypes = [
@@ -15,7 +15,7 @@ export const overTimeTypes = [
   },
   {
     title: '__t_Overtime_vocation',
-    value: EOvertimeAwardType.Dayoff,
+    value: EOvertimeAwardType.Leave,
   },
 ]
 

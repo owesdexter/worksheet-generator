@@ -59,7 +59,7 @@ export default function Basic(){
   }, [generalWorkTime, sd]);
 
   return(
-    <div className="basic-step-container">
+    <div className="">
       <div className="step-title-container">
         <label htmlFor="">{t('__t_Create')}</label>
         <Select data-testid="month-select-0" defaultValue={`${targetMonth}`} onChange={handleMonthChange}>
